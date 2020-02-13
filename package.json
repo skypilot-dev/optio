@@ -1,0 +1,10 @@
+{
+  "name": "@skypilot/optio",
+  "version": "0.1.0",
+  "description": "A tool for managing package options",
+  "main": "lib/index.js",
+  "repository": "https://github.com/skypilotcc/optio",
+  "author": "William Thorsen <william@thorsen.dev>",
+  "license": "ISC",
+  "private": false
+}
