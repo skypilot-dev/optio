@@ -3,8 +3,27 @@
   "version": "0.1.0",
   "description": "A tool for managing package options",
   "main": "lib/index.js",
-  "repository": "https://github.com/skypilotcc/optio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skypilotcc/optio.git"
+  },
   "author": "William Thorsen <william@thorsen.dev>",
   "license": "ISC",
-  "private": false
+  "private": false,
+  "bugs": {
+    "url": "https://github.com/skypilotcc/optio/issues"
+  },
+  "homepage": "https://github.com/skypilotcc/optio#readme",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "config",
+    "configuration",
+    "options",
+    "package",
+    "settings",
+    "utility",
+    "tool"
+  ]
 }
