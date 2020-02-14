@@ -3,6 +3,7 @@ import * as actualExports from '../index';
 const intendedExports: string[] = [
   /* Config */
   'readConfig',
+  'readConfigFn',
   'readConfigFile',
 ];
 
