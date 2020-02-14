@@ -1,2 +1,2 @@
-export { readOption } from './readOption';
+export { readConfig } from './readConfig';
 export { readOptionsFile } from './readOptionsFile';

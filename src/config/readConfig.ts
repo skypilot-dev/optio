@@ -40,7 +40,7 @@ export function parseFilepaths(options: ReadConfigOptions): string[] {
 }
 
 /* Return an option from the configs */
-export function readOption<T>(
+export function readConfig<T>(
   options: ReadConfigOptions, objectPath: string, defaultValue?: T
 ): MaybeUndefined<T> {
   const configs = parseFilepaths(options)
@@ -59,6 +59,6 @@ export function readOption<T>(
 /* Given the settings for config files, return a function that accepts an object path and looks it
  * up in the config files. */
 export function readOptionFn<T>(options: ReadConfigOptions): ReadOptionFunction<T> {
-  return (objectPath: string, defaultValue?: T) => readOption<T>(options, objectPath, defaultValue);
+  return (objectPath: string, defaultValue?: T) => readConfig<T>(options, objectPath, defaultValue);
 }
 

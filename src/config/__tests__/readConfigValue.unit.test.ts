@@ -1,8 +1,8 @@
 import path from 'path';
-import { readOption, readOptionFn, parseFilepaths } from '../readOption';
+import { readConfig, readOptionFn, parseFilepaths } from '../readConfig';
 
 const tmpDirs = ['main', 'overrides'].map(dir => path.join(__dirname, dir));
-const filename = 'options.test.yml';
+const filename = 'config.test.yml';
 const tmpFilepaths = tmpDirs.map(dir => path.join(dir, filename));
 
 describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', () => {
@@ -38,11 +38,11 @@ describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', 
   });
 });
 
-describe('readOption(', () => {
+describe('readConfig(', () => {
   const [configFilepath, overridesFilepath] = tmpFilepaths;
   it('can read a setting from a YAML file', () => {
     const options = { configFilepath };
-    const value = readOption(options, 'version');
+    const value = readConfig(options, 'version');
 
     const expectedValue = 1;
     expect(value).toBe(expectedValue);
@@ -61,7 +61,7 @@ describe('readOption(', () => {
 
   it('if an override exists, should return the override', () => {
     const options = { configFilepath, overridesFilepath };
-    const value = readOption(options, 'version');
+    const value = readConfig(options, 'version');
 
     const expectedValue = 2;
     expect(value).toBe(expectedValue);
@@ -70,7 +70,7 @@ describe('readOption(', () => {
   it("if the setting doesn't exist, should return the default", () => {
     const defaultValue = 0;
     const options = { configFilepath, overridesFilepath };
-    const value = readOption(options, 'nonexistent-objectPath', defaultValue);
+    const value = readConfig(options, 'nonexistent-objectPath', defaultValue);
 
     expect(value).toBe(defaultValue);
   });
