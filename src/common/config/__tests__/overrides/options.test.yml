@@ -1,0 +1,4 @@
+version: 2
+option1: option1-override
+parentOption:
+  nestedOption: 'nestedOptionOverride'

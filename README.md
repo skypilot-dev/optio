@@ -8,3 +8,6 @@
 
 A tool for managing package options
 
+## Functionality
+
+- `readOption`

@@ -1,0 +1,5 @@
+version: 1
+option1: option1-value
+option2: option2-value
+parentOption:
+  nestedOption: 'nestedOption-value'
