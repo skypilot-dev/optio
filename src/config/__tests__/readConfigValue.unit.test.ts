@@ -2,7 +2,7 @@ import path from 'path';
 import { readConfig, readConfigFn, parseFilepaths } from '../readConfig';
 
 const tmpDirs = ['main', 'overrides'].map(dir => path.join(__dirname, dir));
-const filename = 'config.test.yml';
+const filename = 'config.test.yaml';
 const tmpFilepaths = tmpDirs.map(dir => path.join(dir, filename));
 
 describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', () => {
