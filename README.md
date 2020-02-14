@@ -10,4 +10,5 @@ A tool for managing package options
 
 ## Functionality
 
-- `readConfig`
+- `readConfig`: Read a value from one or more serialized config files
+- `readConfigFile`: Read and deserialize a config file 
