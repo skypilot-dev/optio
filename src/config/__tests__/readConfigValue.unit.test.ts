@@ -1,5 +1,5 @@
 import path from 'path';
-import { readConfig, readOptionFn, parseFilepaths } from '../readConfig';
+import { readConfig, readConfigFn, parseFilepaths } from '../readConfig';
 
 const tmpDirs = ['main', 'overrides'].map(dir => path.join(__dirname, dir));
 const filename = 'config.test.yml';
@@ -8,8 +8,7 @@ const tmpFilepaths = tmpDirs.map(dir => path.join(dir, filename));
 describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', () => {
   it('given a filename and directories, should create filepaths from them', () => {
     const options = {
-      configDir: '.skypilot',
-      overridesDir: 'local',
+      directories: ['.skypilot', 'local'],
       filename: 'optio.yaml',
     };
     const parsedFilepaths = parseFilepaths(options);
@@ -21,11 +20,12 @@ describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', 
     expect(parsedFilepaths).toEqual(expectedFilepaths);
   });
 
-  it('given filepaths, should filter out the undefined ones', () => {
+  it('given filepaths, should return the filepaths', () => {
     const options = {
-      configFilepath: '.skypilot/optio.yaml',
-      defaultsFilepath: undefined,
-      overridesFilepath: 'local/optio.yaml',
+      filepaths: [
+        '.skypilot/optio.yaml',
+        'local/optio.yaml',
+      ],
     };
 
     const parsedFilepaths = parseFilepaths(options);
@@ -39,9 +39,9 @@ describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', 
 });
 
 describe('readConfig(', () => {
-  const [configFilepath, overridesFilepath] = tmpFilepaths;
   it('can read a setting from a YAML file', () => {
-    const options = { configFilepath };
+    const [firstFilepath] = tmpFilepaths;
+    const options = { filepaths: [firstFilepath] };
     const value = readConfig(options, 'version');
 
     const expectedValue = 1;
@@ -49,18 +49,19 @@ describe('readConfig(', () => {
   });
 
   it('if no override exists, should return the main value', () => {
-    const options = { configFilepath };
-    const readConfigOption = readOptionFn(options);
+    const [primaryFilepath] = tmpFilepaths;
+    const options = { filepaths: [primaryFilepath] };
+    const readConfigs = readConfigFn(options);
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    const value = readConfigOption('version');
+    const value = readConfigs('version');
 
     const expectedValue = 1;
     expect(value).toBe(expectedValue);
   });
 
   it('if an override exists, should return the override', () => {
-    const options = { configFilepath, overridesFilepath };
+    const options = { filepaths: tmpFilepaths };
     const value = readConfig(options, 'version');
 
     const expectedValue = 2;
@@ -69,7 +70,7 @@ describe('readConfig(', () => {
 
   it("if the setting doesn't exist, should return the default", () => {
     const defaultValue = 0;
-    const options = { configFilepath, overridesFilepath };
+    const options = { filepaths: tmpFilepaths };
     const value = readConfig(options, 'nonexistent-objectPath', defaultValue);
 
     expect(value).toBe(defaultValue);
@@ -78,11 +79,10 @@ describe('readConfig(', () => {
   it("if a config file isn't found, should skip it", () => {
     const defaultValue = 0;
     const options = {
-      configFilepath: 'nonexistent-file',
-      overridesFilepath: 'nonexistent-file',
+      filepaths: ['nonexistent-file', 'nonexistent-file'],
     };
-    const readConfigOption = readOptionFn(options);
-    const value = readConfigOption('nonexistent-objectPath', defaultValue);
+    const readConfigs = readConfigFn(options);
+    const value = readConfigs('nonexistent-objectPath', defaultValue);
 
     expect(value).toBe(defaultValue);
   });

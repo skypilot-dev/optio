@@ -1,53 +1,47 @@
 import { MaybeUndefined } from '@skypilot/common-types';
+import { readPackageFile } from '@skypilot/sugarbowl';
+import { parsePackageName } from '../common/string/parsePackageName';
 import { getOrDefault } from './object/getOrDefault';
 import { readConfigFile } from './readConfigFile';
 
-type ReadOptionFunction<T> = (objectPath: string, defaultValue: T) => MaybeUndefined<T>;
-
-interface ReadConfigFilepathOptions {
-  configFilepath: string;
-  defaultsFilepath?: string;
-  overridesFilepath?: string;
-}
+type ReadConfigFunction<T> = (objectPath: string, defaultValue: T) => MaybeUndefined<T>;
 
 interface ReadConfigDirOptions {
-  configDir: string;
-  defaultsDir?: string;
-  overridesDir?: string;
+  directories: string[];
   filename: string;
 }
 
-type ReadConfigOptions = ReadConfigFilepathOptions | ReadConfigDirOptions;
-
-function generateFilepaths(options: ReadConfigDirOptions): string[] {
-  const { configDir, defaultsDir, overridesDir, filename } = options as ReadConfigDirOptions;
-  return [configDir, defaultsDir, overridesDir]
-    .filter(dir => dir)
-    .map(dir => `${dir}/${filename}`);
+interface ReadConfigFilepathOptions {
+  filepaths: string[];
 }
 
-function filterFilepaths(options: ReadConfigFilepathOptions): string[] {
-  const { configFilepath, defaultsFilepath, overridesFilepath } = options;
-  return [configFilepath, defaultsFilepath, overridesFilepath]
-    .filter(filepath => filepath !== undefined)
-    .map(filepath => filepath as string);
+type ReadConfigOptions =  ReadConfigDirOptions | ReadConfigFilepathOptions;
+
+function generateFilepaths(options: ReadConfigDirOptions): string[] {
+  const packageName = readPackageFile().name as string;
+  const { directory: defaultDirectory, filename: defaultFilename } = parsePackageName(packageName);
+  const {
+    directories = [defaultDirectory, 'local'],
+    filename = defaultFilename,
+  } = options as ReadConfigDirOptions;
+  return directories.map(dir => `${dir}/${filename}`);
 }
 
 export function parseFilepaths(options: ReadConfigOptions): string[] {
   return Object.prototype.hasOwnProperty.call(options, 'filename')
     ? generateFilepaths(options as ReadConfigDirOptions)
-    : filterFilepaths(options as ReadConfigFilepathOptions)
+    : (options as ReadConfigFilepathOptions).filepaths;
 }
 
 /* Return an option from the configs */
 export function readConfig<T>(
   options: ReadConfigOptions, objectPath: string, defaultValue?: T
 ): MaybeUndefined<T> {
-  const configs = parseFilepaths(options)
+  const filepaths = parseFilepaths(options)
     .map(pathToFile => readConfigFile({ pathToFile }));
 
-  for (let i = configs.length - 1; i >= 0; i -= 1) {
-    const config = configs[i];
+  for (let i = filepaths.length - 1; i >= 0; i -= 1) {
+    const config = filepaths[i];
     const value = getOrDefault<T>(config, objectPath);
     if (value !== undefined) {
       return value as T;
@@ -58,7 +52,7 @@ export function readConfig<T>(
 
 /* Given the settings for config files, return a function that accepts an object path and looks it
  * up in the config files. */
-export function readOptionFn<T>(options: ReadConfigOptions): ReadOptionFunction<T> {
+export function readConfigFn<T>(options: ReadConfigOptions): ReadConfigFunction<T> {
   return (objectPath: string, defaultValue?: T) => readConfig<T>(options, objectPath, defaultValue);
 }
 

@@ -4,11 +4,11 @@ import yaml from 'js-yaml';
 import { JsonObject } from '@skypilot/common-types';
 import { findPackageFileDir } from '@skypilot/sugarbowl';
 
-interface ReadOptionsFileOptions {
+interface ReadConfigFileOptions {
   pathToFile?: string;
 }
 
-export function readConfigFile<T = JsonObject>(options: ReadOptionsFileOptions = {}): T {
+export function readConfigFile<T = JsonObject>(options: ReadConfigFileOptions = {}): T {
   const {
     pathToFile = path.resolve(findPackageFileDir(), '.skypilot/fauna-tools.yml'),
   } = options;
