@@ -10,7 +10,7 @@ interface ReadOptionsFileOptions {
 
 export function readOptionsFile<T = JsonObject>(options: ReadOptionsFileOptions = {}): T {
   const {
-    pathToFile = path.resolve(findPackageFileDir(), '.skypilot/optio.yml'),
+    pathToFile = path.resolve(findPackageFileDir(), '.skypilot/fauna-tools.yml'),
   } = options;
   if (fs.existsSync(pathToFile)) {
     const fileContents = fs.readFileSync(pathToFile, { encoding: 'utf-8'} );
