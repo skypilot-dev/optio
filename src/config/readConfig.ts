@@ -1,6 +1,6 @@
 import { MaybeUndefined } from '@skypilot/common-types';
 import { getOrDefault } from './object/getOrDefault';
-import { readOptionsFile } from './readOptionsFile';
+import { readConfigFile } from './readConfigFile';
 
 type ReadOptionFunction<T> = (objectPath: string, defaultValue: T) => MaybeUndefined<T>;
 
@@ -44,7 +44,7 @@ export function readConfig<T>(
   options: ReadConfigOptions, objectPath: string, defaultValue?: T
 ): MaybeUndefined<T> {
   const configs = parseFilepaths(options)
-    .map(pathToFile => readOptionsFile({ pathToFile }));
+    .map(pathToFile => readConfigFile({ pathToFile }));
 
   for (let i = configs.length - 1; i >= 0; i -= 1) {
     const config = configs[i];

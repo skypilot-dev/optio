@@ -3,7 +3,7 @@ import * as actualExports from '../index';
 const intendedExports: string[] = [
   /* Config */
   'readConfig',
-  'readOptionsFile',
+  'readConfigFile',
 ];
 
 describe('Validate exports', () => {
