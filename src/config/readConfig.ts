@@ -40,7 +40,8 @@ export function readConfig<T>(
   const filepaths = parseFilepaths(options)
     .map(pathToFile => readConfigFile({ pathToFile }));
 
-  for (let i = filepaths.length - 1; i >= 0; i -= 1) {
+  /* Check each file in succession; as soon as a match is found, return it. */
+  for (let i = 0; i < filepaths.length; i += 1) {
     const config = filepaths[i];
     const value = getOrDefault<T>(config, objectPath);
     if (value !== undefined) {

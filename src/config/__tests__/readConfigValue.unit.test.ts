@@ -1,7 +1,7 @@
 import path from 'path';
 import { readConfig, readConfigFn, parseFilepaths } from '../readConfig';
 
-const tmpDirs = ['main', 'overrides'].map(dir => path.join(__dirname, dir));
+const tmpDirs = ['overrides', 'primary'].map(dir => path.join(__dirname, dir));
 const filename = 'config.test.yaml';
 const tmpFilepaths = tmpDirs.map(dir => path.join(dir, filename));
 
@@ -40,16 +40,16 @@ describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', 
 
 describe('readConfig(', () => {
   it('can read a setting from a YAML file', () => {
-    const [firstFilepath] = tmpFilepaths;
-    const options = { filepaths: [firstFilepath] };
+    const primaryFilepath = tmpFilepaths[1];
+    const options = { filepaths: [primaryFilepath] };
     const value = readConfig(options, 'version');
 
     const expectedValue = 1;
     expect(value).toBe(expectedValue);
   });
 
-  it('if no override exists, should return the main value', () => {
-    const [primaryFilepath] = tmpFilepaths;
+  it('if no override exists, should return the primary value', () => {
+    const primaryFilepath = tmpFilepaths[1];
     const options = { filepaths: [primaryFilepath] };
     const readConfigs = readConfigFn(options);
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
