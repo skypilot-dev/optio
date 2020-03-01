@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=$NPM_READ_TOKEN" > .npmrc
           yarn install --frozen-lockfile --production=false
-          yarn add @skypilot/quick-release
+          yarn add @skypilot/quick-release --production=false
       - name: Check types
         run: yarn run typecheck
       - name: Lint
