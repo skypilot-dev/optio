@@ -1,19 +1,43 @@
 {
   "name": "@skypilot/optio",
-  "version": "0.1.0",
   "description": "A tool for managing package options",
+  "homepage": "https://github.com/skypilotcc/optio#readme",
+  "version": "1.0.0",
   "main": "lib/index.js",
+  "author": {
+    "email": "william@thorsen.dev",
+    "name": "William Thorsen"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/skypilotcc/optio.git"
   },
-  "author": "William Thorsen <william@thorsen.dev>",
-  "license": "ISC",
-  "private": false,
   "bugs": {
     "url": "https://github.com/skypilotcc/optio/issues"
   },
-  "homepage": "https://github.com/skypilotcc/optio#readme",
+  "keywords": [
+    "config",
+    "configuration",
+    "options",
+    "package",
+    "settings",
+    "tool",
+    "utility"
+  ],
+  "dependencies": {
+    "@skypilot/sugarbowl": "^1.5.0",
+    "js-yaml": "^3.13.1",
+    "lodash.get": "^4.4.2"
+  },
+  "devDependencies": {
+    "@skypilot/common-types": "^1.2.1",
+    "@skypilot/toolchain": "^3.3.1",
+    "@types/js-yaml": "^3.12.2",
+    "@types/lodash.get": "^4.4.6"
+  },
+  "files": [
+    "/lib"
+  ],
   "scripts": {
     "all-ci-checks": "yarn run all-cq-checks && yarn run build",
     "all-cq-checks": "yarn run typecheck && yarn run lint --quiet && yarn test",
@@ -29,31 +53,10 @@
     "test": "jest",
     "typecheck": "tsc"
   },
-  "keywords": [
-    "config",
-    "configuration",
-    "options",
-    "package",
-    "settings",
-    "utility",
-    "tool"
-  ],
-  "devDependencies": {
-    "@skypilot/common-types": "^1.2.1",
-    "@skypilot/toolchain": "^3.3.1",
-    "@types/js-yaml": "^3.12.2",
-    "@types/lodash.get": "^4.4.6"
-  },
+  "private": false,
+  "license": "ISC",
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "/lib"
-  ],
-  "types": "lib/index.d.ts",
-  "dependencies": {
-    "@skypilot/sugarbowl": "^1.5.0",
-    "js-yaml": "^3.13.1",
-    "lodash.get": "^4.4.2"
-  }
+  "types": "lib/index.d.ts"
 }
