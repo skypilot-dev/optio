@@ -58,5 +58,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "resolutions": {
+    "**/acorn-globals/acorn": "^6.4.1",
+    "**/jsdom/acorn": "^7.1.1",
+    "eslint/**/acorn": "^7.1.1"
+  },
   "types": "lib/index.d.ts"
 }
