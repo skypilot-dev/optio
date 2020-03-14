@@ -25,13 +25,13 @@
     "utility"
   ],
   "dependencies": {
-    "@skypilot/sugarbowl": "^1.5.1",
+    "@skypilot/sugarbowl": "^1.5.2",
     "js-yaml": "^3.13.1",
     "lodash.get": "^4.4.2"
   },
   "devDependencies": {
-    "@skypilot/common-types": "^1.4.0",
-    "@skypilot/toolchain": "^3.5.2",
+    "@skypilot/common-types": "^1.4.3",
+    "@skypilot/toolchain": "^3.5.8",
     "@types/js-yaml": "^3.12.2",
     "@types/lodash.get": "^4.4.6"
   },
