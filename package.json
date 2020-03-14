@@ -1,20 +1,8 @@
 {
   "name": "@skypilot/optio",
-  "description": "A tool for managing package options",
-  "homepage": "https://github.com/skypilotcc/optio#readme",
   "version": "1.0.3",
-  "main": "lib/index.js",
-  "author": {
-    "email": "william@thorsen.dev",
-    "name": "William Thorsen"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/skypilotcc/optio.git"
-  },
-  "bugs": {
-    "url": "https://github.com/skypilotcc/optio/issues"
-  },
+  "private": false,
+  "description": "A tool for managing package options",
   "keywords": [
     "config",
     "configuration",
@@ -24,17 +12,21 @@
     "tool",
     "utility"
   ],
-  "dependencies": {
-    "@skypilot/sugarbowl": "^1.5.2",
-    "js-yaml": "^3.13.1",
-    "lodash.get": "^4.4.2"
+  "homepage": "https://github.com/skypilotcc/optio#readme",
+  "bugs": {
+    "url": "https://github.com/skypilotcc/optio/issues"
   },
-  "devDependencies": {
-    "@skypilot/common-types": "^1.4.3",
-    "@skypilot/toolchain": "^3.5.8",
-    "@types/js-yaml": "^3.12.2",
-    "@types/lodash.get": "^4.4.6"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skypilotcc/optio.git"
   },
+  "license": "ISC",
+  "author": {
+    "name": "William Thorsen",
+    "email": "william@thorsen.dev"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "/lib"
   ],
@@ -53,15 +45,23 @@
     "test": "jest",
     "typecheck": "tsc"
   },
-  "private": false,
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "resolutions": {
     "**/acorn-globals/acorn": "^6.4.1",
     "**/jsdom/acorn": "^7.1.1",
     "eslint/**/acorn": "^7.1.1"
   },
-  "types": "lib/index.d.ts"
+  "dependencies": {
+    "@skypilot/sugarbowl": "^1.5.2",
+    "js-yaml": "^3.13.1",
+    "lodash.get": "^4.4.2"
+  },
+  "devDependencies": {
+    "@skypilot/common-types": "^1.4.3",
+    "@skypilot/toolchain": "^3.5.8",
+    "@types/js-yaml": "^3.12.2",
+    "@types/lodash.get": "^4.4.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
