@@ -35,6 +35,9 @@ export function parseFilepaths(options: ReadConfigOptions): string[] {
 }
 
 /* Return an option from the configs */
+export function readConfig<T>(options: ReadConfigOptions, objectPath: string): T | undefined;
+export function readConfig<T>(options: ReadConfigOptions, objectPath: string, defaultValue: T): T;
+
 export function readConfig<T>(
   options: ReadConfigOptions, objectPath: string, defaultValue?: T
 ): MaybeUndefined<T> {
@@ -46,7 +49,7 @@ export function readConfig<T>(
     const config = filepaths[i];
     const value = getOrDefault<T>(config, objectPath);
     if (value !== undefined) {
-      return value as T;
+      return value;
     }
   }
   return defaultValue;
@@ -55,5 +58,10 @@ export function readConfig<T>(
 /* Given the settings for config files, return a function that accepts an object path and looks it
  * up in the config files. */
 export function readConfigFn(options: ReadConfigOptions): ReadConfigFunction {
-  return <T>(objectPath: string, defaultValue?: T) => readConfig<T>(options, objectPath, defaultValue);
+  return <T>(objectPath: string, defaultValue?: T) => {
+    if (defaultValue === undefined) {
+      return readConfig<T>(options, objectPath);
+    }
+    return readConfig<T>(options, objectPath, defaultValue);
+  }
 }
