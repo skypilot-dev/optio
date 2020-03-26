@@ -4,7 +4,8 @@ import { parsePackageName } from '../common/string/parsePackageName';
 import { getOrDefault } from './object/getOrDefault';
 import { readConfigFile } from './readConfigFile';
 
-type ReadConfigFunction<T> = (objectPath: string, defaultValue: T) => MaybeUndefined<T>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ReadConfigFunction = <T>(objectPath: string, defaultValue?: T) => MaybeUndefined<T>;
 
 interface ReadConfigDirOptions {
   directories: string[];
@@ -53,7 +54,6 @@ export function readConfig<T>(
 
 /* Given the settings for config files, return a function that accepts an object path and looks it
  * up in the config files. */
-export function readConfigFn<T>(options: ReadConfigOptions): ReadConfigFunction<T> {
-  return (objectPath: string, defaultValue?: T) => readConfig<T>(options, objectPath, defaultValue);
+export function readConfigFn(options: ReadConfigOptions): ReadConfigFunction {
+  return <T>(objectPath: string, defaultValue?: T) => readConfig<T>(options, objectPath, defaultValue);
 }
-

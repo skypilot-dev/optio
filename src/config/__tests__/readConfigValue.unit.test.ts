@@ -52,8 +52,6 @@ describe('readConfig(', () => {
     const primaryFilepath = tmpFilepaths[1];
     const options = { filepaths: [primaryFilepath] };
     const readConfigs = readConfigFn(options);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
     const value = readConfigs('version');
 
     const expectedValue = 1;
