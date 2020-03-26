@@ -45,20 +45,15 @@
     "test": "jest",
     "typecheck": "tsc"
   },
-  "resolutions": {
-    "**/acorn-globals/acorn": "^6.4.1",
-    "**/jsdom/acorn": "^7.1.1",
-    "eslint/**/acorn": "^7.1.1"
-  },
   "dependencies": {
     "@skypilot/sugarbowl": "^1.5.2",
     "js-yaml": "^3.13.1",
     "lodash.get": "^4.4.2"
   },
   "devDependencies": {
-    "@skypilot/common-types": "^1.4.3",
-    "@skypilot/toolchain": "^3.5.8",
-    "@types/js-yaml": "^3.12.2",
+    "@skypilot/common-types": "^1.4.5",
+    "@skypilot/toolchain": "^3.5.10",
+    "@types/js-yaml": "^3.12.3",
     "@types/lodash.get": "^4.4.6"
   },
   "publishConfig": {
