@@ -1,3 +1,16 @@
+## [1.0.5](https://github.com/skypilotcc/optio/compare/v1.0.5-next.0...v1.0.5) (2020-03-26)
+
+
+
+## [1.0.5-next.0](https://github.com/skypilotcc/optio/compare/v1.0.4...v1.0.5-next.0) (2020-03-26)
+
+
+### Bug Fixes
+
+* Types are wrongly declared on readConfigFn & its returned function ([89b63e6](https://github.com/skypilotcc/optio/commit/89b63e6d4a597fd2ab0b75c03555143fd3131725))
+
+
+
 ## [1.0.4](https://github.com/skypilotcc/optio/compare/v1.0.4-next.0...v1.0.4) (2020-03-26)
 
 
