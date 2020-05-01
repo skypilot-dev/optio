@@ -13,4 +13,3 @@ export function parsePackageName(packageName: string): { directory?: string; fil
     filename: `${repo}.yaml`,
   }
 }
-
