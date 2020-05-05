@@ -1,3 +1,11 @@
+## [1.0.9](https://github.com/skypilotcc/optio/compare/v1.0.9-next.0...v1.0.9) (2020-05-05)
+
+
+
+## [1.0.9-next.0](https://github.com/skypilotcc/optio/compare/v1.0.8...v1.0.9-next.0) (2020-05-05)
+
+
+
 ## [1.0.8](https://github.com/skypilotcc/optio/compare/v1.0.8-next.0...v1.0.8) (2020-05-02)
 
 

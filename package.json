@@ -2,7 +2,7 @@
   "name": "@skypilot/optio",
   "description": "A tool for managing package options",
   "homepage": "https://github.com/skypilotcc/optio#readme",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "lib/index.js",
   "author": {
     "email": "wthorsen@skypilot.dev",
