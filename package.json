@@ -1,7 +1,7 @@
 {
   "name": "@skypilot/optio",
   "description": "A tool for managing package options",
-  "homepage": "https://github.com/skypilotcc/optio#readme",
+  "homepage": "https://github.com/skypilot-dev/optio#readme",
   "version": "1.0.9",
   "main": "lib/index.js",
   "author": {
@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skypilotcc/optio.git"
+    "url": "git+https://github.com/skypilot-dev/optio.git"
   },
   "bugs": {
-    "url": "https://github.com/skypilotcc/optio/issues"
+    "url": "https://github.com/skypilot-dev/optio/issues"
   },
   "keywords": [
     "config",
