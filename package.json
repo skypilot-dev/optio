@@ -1,20 +1,8 @@
 {
   "name": "@skypilot/optio",
+  "version": "1.0.11",
+  "private": false,
   "description": "A tool for managing package options",
-  "homepage": "https://github.com/skypilot-dev/optio#readme",
-  "version": "1.0.10",
-  "main": "lib/index.js",
-  "author": {
-    "email": "wthorsen@skypilot.dev",
-    "name": "William Thorsen"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/skypilot-dev/optio.git"
-  },
-  "bugs": {
-    "url": "https://github.com/skypilot-dev/optio/issues"
-  },
   "keywords": [
     "config",
     "configuration",
@@ -24,17 +12,21 @@
     "tool",
     "utility"
   ],
-  "dependencies": {
-    "@skypilot/sugarbowl": "^1.15.2",
-    "js-yaml": "^3.13.1",
-    "lodash.get": "^4.4.2"
+  "homepage": "https://github.com/skypilot-dev/optio#readme",
+  "bugs": {
+    "url": "https://github.com/skypilot-dev/optio/issues"
   },
-  "devDependencies": {
-    "@skypilot/common-types": "^1.7.2",
-    "@skypilot/toolchain": "^4.0.3",
-    "@types/js-yaml": "^3.12.3",
-    "@types/lodash.get": "^4.4.6"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skypilot-dev/optio.git"
   },
+  "license": "ISC",
+  "author": {
+    "name": "William Thorsen",
+    "email": "wthorsen@skypilot.dev"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "/lib"
   ],
@@ -53,10 +45,18 @@
     "test": "jest",
     "typecheck": "tsc"
   },
-  "private": false,
-  "license": "ISC",
+  "dependencies": {
+    "@skypilot/sugarbowl": "^1.15.2",
+    "js-yaml": "^3.13.1",
+    "lodash.get": "^4.4.2"
+  },
+  "devDependencies": {
+    "@skypilot/common-types": "^1.7.2",
+    "@skypilot/toolchain": "^4.0.3",
+    "@types/js-yaml": "^3.12.3",
+    "@types/lodash.get": "^4.4.6"
+  },
   "publishConfig": {
     "access": "public"
-  },
-  "types": "lib/index.d.ts"
+  }
 }
