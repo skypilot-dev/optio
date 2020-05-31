@@ -1,6 +1,6 @@
 {
   "name": "@skypilot/optio",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "private": false,
   "description": "A tool for managing package options",
   "keywords": [
