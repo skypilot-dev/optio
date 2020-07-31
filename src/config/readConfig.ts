@@ -47,7 +47,7 @@ export function readConfig<T>(
   /* Check each file in succession; as soon as a match is found, return it. */
   for (let i = 0; i < filepaths.length; i += 1) {
     const config = filepaths[i];
-    const value = getOrDefault<T>(config, objectPath);
+    const value = getOrDefault(config, objectPath);
     if (value !== undefined) {
       return value;
     }

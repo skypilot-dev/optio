@@ -16,7 +16,8 @@ describe('getOrDefault(:object, :key, :defaultValue?)', () => {
   });
 
   it('can return the value mapped to an object path', () => {
-    const obj = { a: { b: { c: 1 } } };
+    /* Make this object read-only to demonstrate that typings still work */
+    const obj = { a: { b: { c: 1 } } } as const;
 
     const value = getOrDefault(obj, 'a.b.c');
 
@@ -24,16 +25,12 @@ describe('getOrDefault(:object, :key, :defaultValue?)', () => {
     expect(value).toBe(expectedValue);
   });
 
-  it('given the object only, should return a new function that accepts the remaining parameters', () => {
+  it("if the object path doesn't exist and no default value is specified, should return undefined", () => {
     const obj = { a: { b: { c: 1 } } };
-    const objGetOrDefault = getOrDefault(obj);
-    const defaultValue = 2;
 
-    const valueFromPath = objGetOrDefault('a.b.c');
-    const valueFromDefault = objGetOrDefault('a.b.d', defaultValue);
+    const value = getOrDefault(obj, 'a.b.d');
 
-    const expectedValue = 1;
-    expect(valueFromPath).toBe(expectedValue);
-    expect(valueFromDefault).toBe(defaultValue);
+    const expectedValue = undefined;
+    expect(value).toBe(expectedValue);
   });
 });
