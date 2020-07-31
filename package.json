@@ -46,14 +46,14 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@skypilot/sugarbowl": "^1.18.0",
+    "@skypilot/sugarbowl": "^1.19.0",
     "js-yaml": "^3.14.0",
     "lodash.get": "^4.4.2"
   },
   "devDependencies": {
-    "@skypilot/common-types": "^1.7.3",
-    "@skypilot/toolchain": "^4.0.4",
-    "@types/js-yaml": "^3.12.4",
+    "@skypilot/common-types": "^2.0.0",
+    "@skypilot/toolchain": "^4.1.1",
+    "@types/js-yaml": "^3.12.5",
     "@types/lodash.get": "^4.4.6"
   },
   "publishConfig": {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { MaybeUndefined } from '@skypilot/common-types';
 import lodashGet from 'lodash.get';
 
