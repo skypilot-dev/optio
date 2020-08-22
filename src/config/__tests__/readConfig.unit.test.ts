@@ -1,42 +1,9 @@
 import path from 'path';
-import { readConfig, readConfigFn, parseFilepaths } from '../readConfig';
+import { readConfig, readConfigFn } from '../readConfig';
 
 const tmpDirs = ['overrides', 'primary'].map(dir => path.join(__dirname, dir));
 const filename = 'config.test.yaml';
 const tmpFilepaths = tmpDirs.map(dir => path.join(dir, filename));
-
-describe('parseFilepaths(:(ReadConfigDirOptions | ReadConfigFilepathOptions))', () => {
-  it('given a filename and directories, should create filepaths from them', () => {
-    const options = {
-      directories: ['.skypilot', 'local'],
-      filename: 'optio.yaml',
-    };
-    const parsedFilepaths = parseFilepaths(options);
-
-    const expectedFilepaths = [
-      '.skypilot/optio.yaml',
-      'local/optio.yaml',
-    ];
-    expect(parsedFilepaths).toEqual(expectedFilepaths);
-  });
-
-  it('given filepaths, should return the filepaths', () => {
-    const options = {
-      filepaths: [
-        '.skypilot/optio.yaml',
-        'local/optio.yaml',
-      ],
-    };
-
-    const parsedFilepaths = parseFilepaths(options);
-
-    const expectedFilepaths = [
-      '.skypilot/optio.yaml',
-      'local/optio.yaml',
-    ];
-    expect(parsedFilepaths).toEqual(expectedFilepaths);
-  });
-});
 
 describe('readConfig(', () => {
   it('can read a setting from a YAML file', () => {
