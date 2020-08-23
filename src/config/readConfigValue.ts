@@ -1,4 +1,4 @@
-import type { MaybeUndefined } from '@skypilot/common-types';
+import type { Integer, MaybeUndefined } from '@skypilot/common-types';
 import { onError } from './onError';
 import { getOrDefault } from './object/getOrDefault';
 import { parseFilepaths } from './parseFilepaths';
@@ -6,6 +6,7 @@ import type { FileLocationsMap } from './parseFilepaths';
 import { readConfigFile } from './readConfigFile';
 
 interface ReadConfigValueGeneralOptions {
+  addedCallDepth?: Integer; // how many additional levels to go down the call stack to identify the caller in errors
   ignoreEmpty?: boolean; // if true, empty string values are considered missing (undefined) even if the key is found
   exitOnError?: boolean; // if true, `process.exit(1)` on error
   quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
@@ -43,7 +44,7 @@ export function readConfigValue<T>(
   objectPath: string,
   options: ReadConfigValueOptions<T> = {}
 ): MaybeUndefined<T> | never {
-  const { defaultValue, exitOnError, ignoreEmpty, quiet, required } = options;
+  const { addedCallDepth, defaultValue, exitOnError, ignoreEmpty, quiet, required } = options;
 
   const filepaths = parseFilepaths(fileLocationsMap);
   const configs = filepaths.map(pathToFile => readConfigFile({ pathToFile }));
@@ -66,7 +67,7 @@ export function readConfigValue<T>(
   }
 
   if (required && defaultValue === undefined) {
-    onError({ emptyValueFound, exitOnError, filepaths, objectPath, quiet });
+    onError({ addedCallDepth, emptyValueFound, exitOnError, filepaths, objectPath, quiet });
   }
   return defaultValue;
 }
@@ -77,8 +78,8 @@ export function readConfigValue<T>(
 export function configureReadConfigValue(
   generalOptions: FileLocationsMap & ReadConfigValueGeneralOptions
 ) {
-  const { exitOnError, ignoreEmpty, quiet, ...locationsMap } = generalOptions;
-  const defaultOptions = { exitOnError, ignoreEmpty, quiet };
+  const { addedCallDepth = 1, exitOnError, ignoreEmpty, quiet, ...locationsMap } = generalOptions;
+  const defaultOptions = { addedCallDepth, exitOnError, ignoreEmpty, quiet };
 
   function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { defaultValue: T }): T
   function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { required: true }): T | never
