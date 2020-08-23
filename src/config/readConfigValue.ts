@@ -46,7 +46,7 @@ export function readConfigValue<T>(
   }
 
   const { defaultValue, exitOnError, quiet, required } = options;
-  if (required) {
+  if (required && defaultValue === undefined) {
     const errorMsg = 'Error!';
     if (exitOnError) {
       if (!quiet) {

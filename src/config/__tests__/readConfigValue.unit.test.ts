@@ -64,6 +64,19 @@ describe('readConfigValue(', () => {
     }).toThrow();
   });
 
+  it('if a default value is provided, the `required` option should be ignored', () => {
+    expect.assertions(2);
+    const options = { filepaths: tmpFilepaths };
+
+    expect(() => {
+      const valueOptions = { defaultValue: 0, required: true };
+
+      const value = readConfigValue(options, 'nonexistent-objectPath', valueOptions);
+
+      expect(value).toBe(0);
+    }).not.toThrow();
+  });
+
   it("if a config file isn't found, should skip it", () => {
     const defaultValue = 0;
     const options = {
