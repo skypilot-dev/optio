@@ -1,5 +1,5 @@
 import path from 'path';
-import { readConfigValue, applyToReadConfigValue } from '../readConfigValue';
+import { readConfigValue, configureReadConfigValue } from '../readConfigValue';
 
 const tmpDirs = ['overrides', 'primary'].map(dir => path.join(__dirname, dir));
 const filename = 'config.test.yaml';
@@ -18,7 +18,7 @@ describe('readConfigValue(', () => {
   it('if no override exists, should return the primary value', () => {
     const primaryFilepath = tmpFilepaths[1];
     const options = { filepaths: [primaryFilepath] };
-    const readConfigs = applyToReadConfigValue(options); // demonstrate that partial application works
+    const readConfigs = configureReadConfigValue(options); // demonstrate that partial application works
     const value = readConfigs('version');
 
     const expectedValue = 1;
@@ -69,9 +69,29 @@ describe('readConfigValue(', () => {
     const options = {
       filepaths: ['nonexistent-file', 'nonexistent-file'],
     };
-    const readConfigs = applyToReadConfigValue(options);
+    const readConfigs = configureReadConfigValue(options);
     const value = readConfigs('nonexistent-objectPath', { defaultValue });
 
     expect(value).toBe(defaultValue);
+  });
+});
+
+describe('configureReadConfigValue()', () => {
+  it('should set the defaults for calls to the returned function', () => {
+    /* Set `required: true` on all calls to `readValue` */
+    const readValue = configureReadConfigValue({ filepaths: tmpDirs, required: true });
+
+    expect(() => {
+      readValue('nonexistent-objectPath');
+    }).toThrow();
+  });
+
+  it('options passed to the returned function should override the defaults', () => {
+    /* Set `required: true` on all calls to `readValue` */
+    const readValue = configureReadConfigValue({ filepaths: tmpFilepaths, required: true });
+
+    const value = readValue('nonexistent-objectPath', { required: false });
+
+    expect(value).toBe(undefined);
   });
 });

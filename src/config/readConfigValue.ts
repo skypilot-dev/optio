@@ -6,15 +6,20 @@ import { readConfigFile } from './readConfigFile';
 
 export type ReadConfigFileOptions = FileLocationsMap;
 
-interface ReadConfigValueOptions<T> {
+interface ReadConfigValueGeneralOptions {
+  exitOnError?: boolean; // if true, `process.exit(1)` on error
+  quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
+  required?: boolean; // if true, throw on error if the value is not found
+}
+
+interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
   defaultValue?: T;
-  required?: boolean;
 }
 
 type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
 
 export function readConfigValue<T>(
-  configFileOptions: ReadConfigFileOptions,
+  configOptions: ReadConfigFileOptions,
   objectPath: string,
   valueOptions?: ReadConfigValueOptions<T>
 ): MaybeUndefined<T>
@@ -40,24 +45,32 @@ export function readConfigValue<T>(
     }
   }
 
-  const { defaultValue, required = false } = options;
+  const { defaultValue, exitOnError, quiet, required } = options;
   if (required) {
-    throw new Error('')
+    const errorMsg = 'Error!';
+    if (exitOnError) {
+      if (!quiet) {
+        /* eslint-disable-next-line no-console */
+        console.error(errorMsg);
+      }
+      process.exit(1);
+    }
+    throw new Error(errorMsg);
   }
   return defaultValue;
 }
 
-/* Given `configFileOptions`, apply them to `readConfigValue` & return a function accepting the remaining args */
-export function applyToReadConfigValue(
-  configFileOptions: ReadConfigFileOptions
+/* Given a set of options, apply them to `readConfigValue` & return a function accepting the remaining args */
+export function configureReadConfigValue(
+  generalOptions: ReadConfigFileOptions & ReadConfigValueGeneralOptions
 ): ReadConfigValueFn {
   return <T>(
-    objectPath: string, options: ReadConfigValueOptions<T> = {}
+    objectPath: string, valueOptions: ReadConfigValueOptions<T> = {}
   ): MaybeUndefined<T> => {
-    const { defaultValue, required } = { defaultValue: undefined, required: false, ...options };
-    if (required) {
-      return readConfigValue<T>(configFileOptions, objectPath, { required });
+    const mergedOptions = {
+      ...generalOptions,
+      ...valueOptions,
     }
-    return readConfigValue<T>(configFileOptions, objectPath, { defaultValue });
+    return readConfigValue<T>(mergedOptions, objectPath, valueOptions);
   }
 }
