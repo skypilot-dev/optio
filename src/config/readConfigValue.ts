@@ -1,6 +1,5 @@
-import path from 'path';
 import type { MaybeUndefined } from '@skypilot/common-types';
-import { inflectByNumber } from '@skypilot/sugarbowl';
+import { onError } from './__tests__/onError';
 import { getOrDefault } from './object/getOrDefault';
 import { parseFilepaths } from './parseFilepaths';
 import type { FileLocationsMap } from './parseFilepaths';
@@ -43,7 +42,7 @@ export function readConfigValue<T>(
   fileLocationsMap: FileLocationsMap,
   objectPath: string,
   options: ReadConfigValueOptions<T> = {}
-): MaybeUndefined<T> {
+): MaybeUndefined<T> | never {
   const { defaultValue, exitOnError, ignoreEmpty, quiet, required } = options;
 
   const filepaths = parseFilepaths(fileLocationsMap);
@@ -67,21 +66,7 @@ export function readConfigValue<T>(
   }
 
   if (required && defaultValue === undefined) {
-    const relativeFilepaths = filepaths.map(filepath => path.relative(path.resolve(), filepath)).join(', ');
-    const unit = inflectByNumber(filepaths.length, 'config');
-    const errorMsgPrefix = emptyValueFound ? 'A non-empty value for the' : 'The';
-    const errorMsg = [
-      errorMsgPrefix,
-      `key '${objectPath}' was not found in the ${unit}: ${relativeFilepaths}`,
-    ].join(' ');
-    if (exitOnError) {
-      if (!quiet) {
-        /* eslint-disable-next-line no-console */
-        console.error(errorMsg);
-      }
-      process.exit(1);
-    }
-    throw new Error(errorMsg);
+    onError({ emptyValueFound, exitOnError, filepaths, objectPath, quiet });
   }
   return defaultValue;
 }
