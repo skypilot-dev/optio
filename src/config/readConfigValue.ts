@@ -19,6 +19,17 @@ interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
 
 type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
 
+export function readConfigValue<T>(
+  fileLocationsMap: FileLocationsMap,
+  objectPath: string,
+  options: ReadConfigValueOptions<T> & { required: true }
+): T | never
+export function readConfigValue<T>(
+  fileLocationsMap: FileLocationsMap,
+  objectPath: string,
+  options?: ReadConfigValueOptions<T>
+): MaybeUndefined<T>
+
 /* Given an object defining file locations and an object path, return the value found at that
    first matching object path in those files; if `defaultValue` is specified in the options and
    the object path isn't found, return `defaultValue`; if the `required` option is `true`,
