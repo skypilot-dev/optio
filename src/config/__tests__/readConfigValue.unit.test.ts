@@ -1,6 +1,5 @@
 import path from 'path';
-import { curry } from '@skypilot/sugarbowl';
-import { readConfigValue } from '../readConfigValue';
+import { readConfigValue, applyToReadConfigValue } from '../readConfigValue';
 
 const tmpDirs = ['overrides', 'primary'].map(dir => path.join(__dirname, dir));
 const filename = 'config.test.yaml';
@@ -19,7 +18,7 @@ describe('readConfigValue(', () => {
   it('if no override exists, should return the primary value', () => {
     const primaryFilepath = tmpFilepaths[1];
     const options = { filepaths: [primaryFilepath] };
-    const readConfigs = curry(readConfigValue, options);
+    const readConfigs = applyToReadConfigValue(options); // demonstrate that partial application works
     const value = readConfigs('version');
 
     const expectedValue = 1;
@@ -70,7 +69,7 @@ describe('readConfigValue(', () => {
     const options = {
       filepaths: ['nonexistent-file', 'nonexistent-file'],
     };
-    const readConfigs = curry(readConfigValue, options);
+    const readConfigs = applyToReadConfigValue(options);
     const value = readConfigs('nonexistent-objectPath', { defaultValue });
 
     expect(value).toBe(defaultValue);
