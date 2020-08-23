@@ -1,6 +1,18 @@
 import path from 'path';
 import { inflectByNumber } from '@skypilot/sugarbowl';
 
+function debugLine(): string {
+  const e = new Error();
+  const frame = e.stack?.split('\n')[4] || '';
+  const lineNumber = frame.split(':')[1];
+  const pathToFile = frame
+    .split('(')[1]
+    .split(')')[0]
+    .split(':')[0];
+  const relativePathToFile = path.relative(path.resolve(), pathToFile);
+  return `Error at ${relativePathToFile}:${lineNumber}`;
+}
+
 interface OnErrorInput {
   filepaths: string[];
   objectPath: string;
@@ -25,7 +37,7 @@ export function onError(options: OnErrorInput): string {
   if (exitOnError) {
     if (!quiet) {
       /* eslint-disable-next-line no-console */
-      console.error(errorMsg);
+      console.error(`${debugLine()}\n  ${errorMsg}`);
     }
     process.exit(1);
   }
