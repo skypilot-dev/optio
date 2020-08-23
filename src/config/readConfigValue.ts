@@ -22,6 +22,11 @@ interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
 export function readConfigValue<T>(
   fileLocationsMap: FileLocationsMap,
   objectPath: string,
+  options: ReadConfigValueOptions<T> & { defaultValue: T }
+): T
+export function readConfigValue<T>(
+  fileLocationsMap: FileLocationsMap,
+  objectPath: string,
   options: ReadConfigValueOptions<T> & { required: true }
 ): T | never
 export function readConfigValue<T>(
@@ -90,6 +95,7 @@ export function configureReadConfigValue(
   const { exitOnError, ignoreEmpty, quiet, ...locationsMap } = generalOptions;
   const defaultOptions = { exitOnError, ignoreEmpty, quiet };
 
+  function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { defaultValue: T }): T
   function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { required: true }): T | never
   function readConfig<T>(objectPath: string, options?: ReadConfigValueOptions<T>): MaybeUndefined<T>
 
