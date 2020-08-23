@@ -69,9 +69,11 @@ describe('readConfigValue(', () => {
     const options = { filepaths: tmpFilepaths };
 
     expect(() => {
-      const valueOptions = { defaultValue: 0, required: true } as const;
+      const valueOptions = { defaultValue: 0 };
 
-      const value: number = readConfigValue(options, 'nonexistent-objectPath', valueOptions);
+      /* The return value is known to be either `number` (because the type of `defaultValue` is `number`)
+         or `undefined` (because `required: false`) */
+      const value: number | undefined = readConfigValue(options, 'nonexistent-objectPath', valueOptions);
 
       expect(value).toBe(0);
     }).not.toThrow();
@@ -80,7 +82,8 @@ describe('readConfigValue(', () => {
   it('by default, an empty string should be treated as a valid value', () => {
     const options = { filepaths: tmpFilepaths };
 
-    const value = readConfigValue(options, 'falsyStringOption', { required: true });
+    /* The return value cannot be `undefined`, because `required: true` */
+    const value: string = readConfigValue<string>(options, 'falsyStringOption', { required: true });
 
     expect(value).toBe('');
   });
@@ -119,7 +122,7 @@ describe('configureReadConfigValue()', () => {
   it('should set the defaults for calls to the returned function', () => {
     const readValue = configureReadConfigValue({ ignoreEmpty: true, filepaths: tmpFilepaths });
 
-    const value = readValue('falsyStringOption');
+    const value: string | undefined = readValue<string>('falsyStringOption');
 
     expect(value).toBe(undefined);
   });

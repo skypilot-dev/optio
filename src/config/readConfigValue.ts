@@ -17,7 +17,7 @@ interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
   required?: boolean; // if true, throw on error if the value is not found
 }
 
-type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
+// type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
 
 export function readConfigValue<T>(
   fileLocationsMap: FileLocationsMap,
@@ -82,18 +82,24 @@ export function readConfigValue<T>(
 }
 
 /* Given a set of options, apply them to `readConfigValue` & return a function accepting the remaining args */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 export function configureReadConfigValue(
   generalOptions: FileLocationsMap & ReadConfigValueGeneralOptions
-): ReadConfigValueFn {
+) {
   const { exitOnError, ignoreEmpty, quiet, ...locationsMap } = generalOptions;
   const defaultOptions = { exitOnError, ignoreEmpty, quiet };
-  return <T>(
-    objectPath: string, valueOptions: ReadConfigValueOptions<T> = {}
-  ): typeof valueOptions extends { required: true } ? T : MaybeUndefined<T> => {
+
+  function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { required: true }): T | never
+  function readConfig<T>(objectPath: string, options?: ReadConfigValueOptions<T>): MaybeUndefined<T>
+
+  function readConfig<T>(objectPath: string, valueOptions: ReadConfigValueOptions<T> = {}) {
     const mergedOptions = {
       ...defaultOptions,
       ...valueOptions,
     }
     return readConfigValue<T>(locationsMap, objectPath, mergedOptions);
   }
+
+  return readConfig;
 }
