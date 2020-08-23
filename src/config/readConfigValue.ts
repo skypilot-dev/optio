@@ -7,7 +7,7 @@ import type { FileLocationsMap } from './parseFilepaths';
 import { readConfigFile } from './readConfigFile';
 
 interface ReadConfigValueGeneralOptions {
-  allowEmpty?: boolean; // unless true, empty values are considered missing even if the key is found
+  ignoreEmpty?: boolean; // if true, empty string values are considered missing (undefined) even if the key is found
   exitOnError?: boolean; // if true, `process.exit(1)` on error
   quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
 }
@@ -39,7 +39,7 @@ export function readConfigValue<T>(
   objectPath: string,
   options: ReadConfigValueOptions<T> = {}
 ): MaybeUndefined<T> {
-  const { allowEmpty, defaultValue, exitOnError, quiet, required } = options;
+  const { defaultValue, exitOnError, ignoreEmpty, quiet, required } = options;
 
   const filepaths = parseFilepaths(fileLocationsMap);
   const configs = filepaths.map(pathToFile => readConfigFile({ pathToFile }));
@@ -54,14 +54,14 @@ export function readConfigValue<T>(
       if (value !== '') {
         return value
       }
-      if (allowEmpty) {
+      if (!ignoreEmpty) {
         return value;
       }
-      emptyValueFound = true;
+      emptyValueFound = true; // indicates that the object path has an empty string value in at least one config file
     }
   }
 
-  if (defaultValue === undefined && (required && !allowEmpty)) {
+  if (required && defaultValue === undefined) {
     const relativeFilepaths = filepaths.map(filepath => path.relative(path.resolve(), filepath)).join(', ');
     const unit = inflectByNumber(filepaths.length, 'config');
     const errorMsgPrefix = emptyValueFound ? 'A non-empty value for the' : 'The';
@@ -85,8 +85,8 @@ export function readConfigValue<T>(
 export function configureReadConfigValue(
   generalOptions: FileLocationsMap & ReadConfigValueGeneralOptions
 ): ReadConfigValueFn {
-  const { allowEmpty, exitOnError, quiet, ...locationsMap } = generalOptions;
-  const defaultOptions = { allowEmpty, exitOnError, quiet };
+  const { exitOnError, ignoreEmpty, quiet, ...locationsMap } = generalOptions;
+  const defaultOptions = { exitOnError, ignoreEmpty, quiet };
   return <T>(
     objectPath: string, valueOptions: ReadConfigValueOptions<T> = {}
   ): typeof valueOptions extends { required: true } ? T : MaybeUndefined<T> => {

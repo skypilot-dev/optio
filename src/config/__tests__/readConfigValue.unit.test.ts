@@ -77,20 +77,20 @@ describe('readConfigValue(', () => {
     }).not.toThrow();
   });
 
-  it('by default, an empty string should be treated as a missing value', () => {
+  it('by default, an empty string should be treated as a valid value', () => {
     const options = { filepaths: tmpFilepaths };
 
-    expect(() => {
-      readConfigValue(options, 'falsyStringOption', { required: true });
-    }).toThrow();
-  });
-
-  it('if `allowEmpty: true`, an empty string should be returned as valid', () => {
-    const options = { filepaths: tmpFilepaths };
-
-    const value = readConfigValue(options, 'falsyStringOption', { allowEmpty: true } );
+    const value = readConfigValue(options, 'falsyStringOption', { required: true });
 
     expect(value).toBe('');
+  });
+
+  it('if `ignoreEmpty: true`, an empty string should be treated as undefined', () => {
+    const options = { filepaths: tmpFilepaths };
+
+    const value = readConfigValue(options, 'falsyStringOption', { ignoreEmpty: true } );
+
+    expect(value).toBe(undefined);
   });
 
   it('`0` and `false` should be returned as valid', () => {
@@ -117,21 +117,18 @@ describe('readConfigValue(', () => {
 
 describe('configureReadConfigValue()', () => {
   it('should set the defaults for calls to the returned function', () => {
-    expect.assertions(2);
-    const readValue = configureReadConfigValue({ allowEmpty: true, filepaths: tmpFilepaths });
+    const readValue = configureReadConfigValue({ ignoreEmpty: true, filepaths: tmpFilepaths });
 
-    expect(() => {
-      const value = readValue('falsyStringOption');
+    const value = readValue('falsyStringOption');
 
-      expect(value).toBe('');
-    }).not.toThrow();
+    expect(value).toBe(undefined);
   });
 
   it('options passed to the returned function should override the defaults', () => {
-    const readValue = configureReadConfigValue({ allowEmpty: true, filepaths: tmpFilepaths });
+    const readValue = configureReadConfigValue({ ignoreEmpty: false, filepaths: tmpFilepaths });
 
     expect(() => {
-      readValue('falsyStringOption', { allowEmpty: false, required: true });
+      readValue('falsyStringOption', { ignoreEmpty: true, required: true });
     }).toThrowError("A non-empty value for the key 'falsyStringOption' was not found");
   });
 });
