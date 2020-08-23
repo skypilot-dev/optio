@@ -1,0 +1,5 @@
+service:
+  # Set the API token in your local config file; do not commit to the repo
+  apiToken: ''
+  endpoint: 'https://skypilot.dev'
+  port: 3000

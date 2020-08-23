@@ -1,0 +1,6 @@
+service:
+  apiToken: ''
+user:
+  email: 'jdoe@example.com'
+  mode: 'admin'
+  username: 'jdoe'
