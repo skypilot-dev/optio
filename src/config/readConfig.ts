@@ -4,20 +4,17 @@ import type { FileLocationsMap } from './parseFilepaths';
 import { getOrDefault } from './object/getOrDefault';
 import { readConfigFile } from './readConfigFile';
 
-type ReadConfigOptions = FileLocationsMap;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ReadConfigFunction = <T>(objectPath: string, defaultValue?: T) => MaybeUndefined<T>;
+type ReadConfigFunction = <T>(objectPath: string, defaultValue?: T) => MaybeUndefined<T>;
 
 /* Return an option from the configs */
-export function readConfig<T>(options: ReadConfigOptions, objectPath: string): T | undefined;
-export function readConfig<T>(options: ReadConfigOptions, objectPath: string, defaultValue: T): T;
+export function readConfig<T>(locationsMap: FileLocationsMap, objectPath: string): T | undefined;
+export function readConfig<T>(locationsMap: FileLocationsMap, objectPath: string, defaultValue: T): T;
 
 /* @deprecated Use `readConfigValue` instead */
 export function readConfig<T>(
-  options: ReadConfigOptions, objectPath: string, defaultValue?: T
+  locationsMap: FileLocationsMap, objectPath: string, defaultValue?: T
 ): MaybeUndefined<T> {
-  const filepaths = parseFilepaths(options)
+  const filepaths = parseFilepaths(locationsMap)
     .map(pathToFile => readConfigFile({ pathToFile }));
 
   /* Check each file in succession; as soon as a match is found, return it. */
@@ -34,11 +31,11 @@ export function readConfig<T>(
 /* Given the settings for config files, return a function that accepts an object path and looks it
  * up in the config files. */
 /* @deprecated Use `configureReadConfigValue` instead */
-export function readConfigFn(options: ReadConfigOptions): ReadConfigFunction {
+export function readConfigFn(locationsMap: FileLocationsMap): ReadConfigFunction {
   return <T>(objectPath: string, defaultValue?: T) => {
     if (defaultValue === undefined) {
-      return readConfig<T>(options, objectPath);
+      return readConfig<T>(locationsMap, objectPath);
     }
-    return readConfig<T>(options, objectPath, defaultValue);
+    return readConfig<T>(locationsMap, objectPath, defaultValue);
   }
 }
