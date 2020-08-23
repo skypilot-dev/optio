@@ -69,9 +69,9 @@ describe('readConfigValue(', () => {
     const options = { filepaths: tmpFilepaths };
 
     expect(() => {
-      const valueOptions = { defaultValue: 0, required: true };
+      const valueOptions = { defaultValue: 0, required: true } as const;
 
-      const value = readConfigValue(options, 'nonexistent-objectPath', valueOptions);
+      const value: number = readConfigValue(options, 'nonexistent-objectPath', valueOptions);
 
       expect(value).toBe(0);
     }).not.toThrow();
@@ -117,20 +117,21 @@ describe('readConfigValue(', () => {
 
 describe('configureReadConfigValue()', () => {
   it('should set the defaults for calls to the returned function', () => {
-    /* Set `required: true` on all calls to `readValue` */
-    const readValue = configureReadConfigValue({ filepaths: tmpDirs, required: true });
+    expect.assertions(2);
+    const readValue = configureReadConfigValue({ allowEmpty: true, filepaths: tmpFilepaths });
 
     expect(() => {
-      readValue('nonexistent-objectPath');
-    }).toThrow();
+      const value = readValue('falsyStringOption');
+
+      expect(value).toBe('');
+    }).not.toThrow();
   });
 
   it('options passed to the returned function should override the defaults', () => {
-    /* Set `required: true` on all calls to `readValue` */
-    const readValue = configureReadConfigValue({ filepaths: tmpFilepaths, required: true });
+    const readValue = configureReadConfigValue({ allowEmpty: true, filepaths: tmpFilepaths });
 
-    const value = readValue('nonexistent-objectPath', { required: false });
-
-    expect(value).toBe(undefined);
+    expect(() => {
+      readValue('falsyStringOption', { allowEmpty: false });
+    }).toThrow();
   });
 });

@@ -10,14 +10,25 @@ interface ReadConfigValueGeneralOptions {
   allowEmpty?: boolean; // unless true, empty values are considered missing even if the key is found
   exitOnError?: boolean; // if true, `process.exit(1)` on error
   quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
-  required?: boolean; // if true, throw on error if the value is not found
 }
 
 interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
   defaultValue?: T;
+  required?: boolean; // if true, throw on error if the value is not found
 }
 
 type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
+
+export function readConfigValue<T>(
+  fileLocationsMap: FileLocationsMap,
+  objectPath: string,
+  options: ReadConfigValueOptions<T> & { required: true }
+): T | never
+export function readConfigValue<T>(
+  fileLocationsMap: FileLocationsMap,
+  objectPath: string,
+  options?: ReadConfigValueOptions<T>
+): MaybeUndefined<T>
 
 /* Given an object defining file locations and an object path, return the value found at that
    first matching object path in those files; if `defaultValue` is specified in the options and
@@ -62,11 +73,11 @@ export function readConfigValue<T>(
 export function configureReadConfigValue(
   generalOptions: FileLocationsMap & ReadConfigValueGeneralOptions
 ): ReadConfigValueFn {
-  const { allowEmpty, exitOnError, quiet, required, ...locationsMap } = generalOptions;
-  const defaultOptions = { allowEmpty, exitOnError, quiet, required };
+  const { allowEmpty, exitOnError, quiet, ...locationsMap } = generalOptions;
+  const defaultOptions = { allowEmpty, exitOnError, quiet };
   return <T>(
     objectPath: string, valueOptions: ReadConfigValueOptions<T> = {}
-  ): MaybeUndefined<T> => {
+  ): typeof valueOptions extends { required: true } ? T : MaybeUndefined<T> => {
     const mergedOptions = {
       ...defaultOptions,
       ...valueOptions,
