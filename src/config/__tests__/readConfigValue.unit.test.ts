@@ -77,6 +77,32 @@ describe('readConfigValue(', () => {
     }).not.toThrow();
   });
 
+  it('by default, an empty string should be treated as a missing value', () => {
+    const options = { filepaths: tmpFilepaths };
+
+    expect(() => {
+      readConfigValue(options, 'falsyStringOption', { required: true });
+    }).toThrow();
+  });
+
+  it('if `allowEmpty: true`, an empty string should be returned as valid', () => {
+    const options = { filepaths: tmpFilepaths };
+
+    const value = readConfigValue(options, 'falsyStringOption', { allowEmpty: true } );
+
+    expect(value).toBe('');
+  });
+
+  it('`0` and `false` should be returned as valid', () => {
+    const options = { filepaths: tmpFilepaths };
+
+    const booleanValue = readConfigValue(options, 'falsyBooleanOption');
+    expect(booleanValue).toBe(false);
+
+    const numericValue = readConfigValue(options, 'falsyNumericOption');
+    expect(numericValue).toBe(0);
+  });
+
   it("if a config file isn't found, should skip it", () => {
     const defaultValue = 0;
     const options = {

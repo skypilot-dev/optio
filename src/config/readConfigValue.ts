@@ -6,9 +6,8 @@ import { parseFilepaths } from './parseFilepaths';
 import type { FileLocationsMap } from './parseFilepaths';
 import { readConfigFile } from './readConfigFile';
 
-export type ReadConfigFileOptions = FileLocationsMap;
-
 interface ReadConfigValueGeneralOptions {
+  allowEmpty?: boolean; // unless true, empty values are considered missing even if the key is found
   exitOnError?: boolean; // if true, `process.exit(1)` on error
   quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
   required?: boolean; // if true, throw on error if the value is not found
@@ -20,34 +19,29 @@ interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
 
 type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
 
-export function readConfigValue<T>(
-  configOptions: ReadConfigFileOptions,
-  objectPath: string,
-  valueOptions?: ReadConfigValueOptions<T>
-): MaybeUndefined<T>
-
 /* Given an object defining file locations and an object path, return the value found at that
    first matching object path in those files; if `defaultValue` is specified in the options and
    the object path isn't found, return `defaultValue`; if the `required` option is `true`,
    throw an error if the object path isn't found */
 export function readConfigValue<T>(
-  configFileOptions: ReadConfigFileOptions,
+  fileLocationsMap: FileLocationsMap,
   objectPath: string,
   options: ReadConfigValueOptions<T> = {}
-): MaybeUndefined<T> | ReadConfigValueFn {
-  const filepaths = parseFilepaths(configFileOptions);
+): MaybeUndefined<T> {
+  const { allowEmpty, defaultValue, exitOnError, quiet, required } = options;
+
+  const filepaths = parseFilepaths(fileLocationsMap);
   const configs = filepaths.map(pathToFile => readConfigFile({ pathToFile }));
 
   /* Check each file in succession; as soon as a match is found, return it. */
   for (let i = 0; i < configs.length; i += 1) {
     const config = configs[i];
     const value = getOrDefault(config, objectPath);
-    if (value !== undefined) {
+    if (value !== undefined && (value !== '' || allowEmpty)) {
       return value;
     }
   }
 
-  const { defaultValue, exitOnError, quiet, required } = options;
   if (required && defaultValue === undefined) {
     const relativeFilepaths = filepaths.map(filepath => path.relative(path.resolve(), filepath)).join(', ');
     const unit = inflectByNumber(filepaths.length, 'config');
@@ -66,15 +60,17 @@ export function readConfigValue<T>(
 
 /* Given a set of options, apply them to `readConfigValue` & return a function accepting the remaining args */
 export function configureReadConfigValue(
-  generalOptions: ReadConfigFileOptions & ReadConfigValueGeneralOptions
+  generalOptions: FileLocationsMap & ReadConfigValueGeneralOptions
 ): ReadConfigValueFn {
+  const { allowEmpty, exitOnError, quiet, required, ...locationsMap } = generalOptions;
+  const defaultOptions = { allowEmpty, exitOnError, quiet, required };
   return <T>(
     objectPath: string, valueOptions: ReadConfigValueOptions<T> = {}
   ): MaybeUndefined<T> => {
     const mergedOptions = {
-      ...generalOptions,
+      ...defaultOptions,
       ...valueOptions,
     }
-    return readConfigValue<T>(mergedOptions, objectPath, valueOptions);
+    return readConfigValue<T>(locationsMap, objectPath, mergedOptions);
   }
 }
