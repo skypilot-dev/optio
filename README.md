@@ -12,5 +12,8 @@ A tool for managing package options
 
 ## Functionality
 
-- `readConfig`: Read a value from one or more serialized config files
+- `configureReadConfigValue`: Return a function that calls `readConfigValue` with preset options
 - `readConfigFile`: Read and deserialize a config file 
+- `readConfigValue`: Read a value from one or more serialized config files
+
+- `readConfig`: Deprecated; use `readConfigValue` instead

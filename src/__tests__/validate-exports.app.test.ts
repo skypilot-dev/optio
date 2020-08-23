@@ -2,9 +2,11 @@ import * as actualExports from '../index';
 
 const intendedExports: string[] = [
   /* Config */
+  'configureReadConfigValue',
   'readConfig',
   'readConfigFn',
   'readConfigFile',
+  'readConfigValue',
 ];
 
 describe('Validate exports', () => {

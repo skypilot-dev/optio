@@ -13,6 +13,7 @@ export type ReadConfigFunction = <T>(objectPath: string, defaultValue?: T) => Ma
 export function readConfig<T>(options: ReadConfigOptions, objectPath: string): T | undefined;
 export function readConfig<T>(options: ReadConfigOptions, objectPath: string, defaultValue: T): T;
 
+/* @deprecated Use `readConfigValue` instead */
 export function readConfig<T>(
   options: ReadConfigOptions, objectPath: string, defaultValue?: T
 ): MaybeUndefined<T> {
@@ -32,6 +33,7 @@ export function readConfig<T>(
 
 /* Given the settings for config files, return a function that accepts an object path and looks it
  * up in the config files. */
+/* @deprecated Use `configureReadConfigValue` instead */
 export function readConfigFn(options: ReadConfigOptions): ReadConfigFunction {
   return <T>(objectPath: string, defaultValue?: T) => {
     if (defaultValue === undefined) {
