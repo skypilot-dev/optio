@@ -1,4 +1,6 @@
+import path from 'path';
 import type { MaybeUndefined } from '@skypilot/common-types';
+import { inflectByNumber } from '@skypilot/sugarbowl';
 import { getOrDefault } from './object/getOrDefault';
 import { parseFilepaths } from './parseFilepaths';
 import type { FileLocationsMap } from './parseFilepaths';
@@ -33,12 +35,12 @@ export function readConfigValue<T>(
   objectPath: string,
   options: ReadConfigValueOptions<T> = {}
 ): MaybeUndefined<T> | ReadConfigValueFn {
-  const filepaths = parseFilepaths(configFileOptions)
-    .map(pathToFile => readConfigFile({ pathToFile }));
+  const filepaths = parseFilepaths(configFileOptions);
+  const configs = filepaths.map(pathToFile => readConfigFile({ pathToFile }));
 
   /* Check each file in succession; as soon as a match is found, return it. */
-  for (let i = 0; i < filepaths.length; i += 1) {
-    const config = filepaths[i];
+  for (let i = 0; i < configs.length; i += 1) {
+    const config = configs[i];
     const value = getOrDefault(config, objectPath);
     if (value !== undefined) {
       return value;
@@ -47,7 +49,9 @@ export function readConfigValue<T>(
 
   const { defaultValue, exitOnError, quiet, required } = options;
   if (required && defaultValue === undefined) {
-    const errorMsg = 'Error!';
+    const relativeFilepaths = filepaths.map(filepath => path.relative(path.resolve(), filepath)).join(', ');
+    const unit = inflectByNumber(filepaths.length, 'config');
+    const errorMsg = `The key '${objectPath}' was not found in the ${unit}: ${relativeFilepaths}`;
     if (exitOnError) {
       if (!quiet) {
         /* eslint-disable-next-line no-console */
