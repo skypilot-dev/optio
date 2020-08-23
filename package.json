@@ -43,6 +43,7 @@
     "publish:default": "yarn publish --non-interactive",
     "tc": "yarn run typecheck",
     "test": "jest",
+    "test-exit-on-error": "babel-node --extensions .ts src/scripts/test-exit-on-error.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
