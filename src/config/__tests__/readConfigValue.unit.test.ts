@@ -61,7 +61,7 @@ describe('readConfigValue(', () => {
 
     expect(() => {
       readConfigValue(options, 'nonexistent-objectPath', { required: true });
-    }).toThrow();
+    }).toThrow("The key 'nonexistent-objectPath' was not found");
   });
 
   it('if a default value is provided, the `required` option should be ignored', () => {
@@ -131,7 +131,7 @@ describe('configureReadConfigValue()', () => {
     const readValue = configureReadConfigValue({ allowEmpty: true, filepaths: tmpFilepaths });
 
     expect(() => {
-      readValue('falsyStringOption', { allowEmpty: false });
-    }).toThrow();
+      readValue('falsyStringOption', { allowEmpty: false, required: true });
+    }).toThrowError("A non-empty value for the key 'falsyStringOption' was not found");
   });
 });

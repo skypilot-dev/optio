@@ -44,19 +44,31 @@ export function readConfigValue<T>(
   const filepaths = parseFilepaths(fileLocationsMap);
   const configs = filepaths.map(pathToFile => readConfigFile({ pathToFile }));
 
+  let emptyValueFound = false;
+
   /* Check each file in succession; as soon as a match is found, return it. */
   for (let i = 0; i < configs.length; i += 1) {
     const config = configs[i];
     const value = getOrDefault(config, objectPath);
-    if (value !== undefined && (value !== '' || allowEmpty)) {
-      return value;
+    if (value !== undefined) {
+      if (value !== '') {
+        return value
+      }
+      if (allowEmpty) {
+        return value;
+      }
+      emptyValueFound = true;
     }
   }
 
-  if (required && defaultValue === undefined) {
+  if (defaultValue === undefined && (required && !allowEmpty)) {
     const relativeFilepaths = filepaths.map(filepath => path.relative(path.resolve(), filepath)).join(', ');
     const unit = inflectByNumber(filepaths.length, 'config');
-    const errorMsg = `The key '${objectPath}' was not found in the ${unit}: ${relativeFilepaths}`;
+    const errorMsgPrefix = emptyValueFound ? 'A non-empty value for the' : 'The';
+    const errorMsg = [
+      errorMsgPrefix,
+      `key '${objectPath}' was not found in the ${unit}: ${relativeFilepaths}`,
+    ].join(' ');
     if (exitOnError) {
       if (!quiet) {
         /* eslint-disable-next-line no-console */
