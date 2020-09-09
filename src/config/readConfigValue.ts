@@ -5,14 +5,14 @@ import { parseFilepaths } from './parseFilepaths';
 import type { FileLocationsMap } from './parseFilepaths';
 import { readConfigFile } from './readConfigFile';
 
-interface ReadConfigValueGeneralOptions {
+export interface ReadConfigValueGeneralOptions {
   addedCallDepth?: Integer; // how many additional levels to go down the call stack to identify the caller in errors
   ignoreEmpty?: boolean; // if true, empty string values are considered missing (undefined) even if the key is found
   exitOnError?: boolean; // if true, `process.exit(1)` on error
   quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
 }
 
-interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
+export interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions {
   defaultValue?: T;
   required?: boolean; // if true, throw on error if the value is not found
 }
