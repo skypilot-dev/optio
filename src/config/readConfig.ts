@@ -37,5 +37,5 @@ export function readConfigFn(locationsMap: FileLocationsMap): ReadConfigFunction
       return readConfig<T>(locationsMap, objectPath);
     }
     return readConfig<T>(locationsMap, objectPath, defaultValue);
-  }
+  };
 }

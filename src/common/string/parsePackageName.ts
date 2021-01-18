@@ -11,5 +11,5 @@ export function parsePackageName(packageName: string): { directory?: string; fil
   return {
     directory: `.${owner}`,
     filename: `${repo}.yaml`,
-  }
+  };
 }

@@ -11,7 +11,7 @@ describe('readConfigValue(', () => {
     const value = readConfigValue<string>(
       { filepaths },
       'user.username'
-    )
+    );
     expect(value).toBe('jdoe');
   });
 
@@ -46,7 +46,7 @@ describe('readConfigValue(', () => {
       { filepaths },
       'service.apiToken', // object path
       { ignoreEmpty: true },
-    )
+    );
     expect(value).toBe(undefined);
   });
 
@@ -56,7 +56,7 @@ describe('readConfigValue(', () => {
         { filepaths },
         'service.apiToken', // object path
         { ignoreEmpty: true, required: true },
-      )
+      );
     }).toThrowError("A non-empty value for the key 'service.apiToken' was not found in the configs");
   });
 });
