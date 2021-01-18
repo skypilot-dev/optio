@@ -57,7 +57,7 @@ export function readConfigValue<T>(
     const value = getOrDefault(config, objectPath);
     if (value !== undefined) {
       if (value !== '') {
-        return value
+        return value;
       }
       if (!ignoreEmpty) {
         return value;
@@ -89,7 +89,7 @@ export function configureReadConfigValue(
     const mergedOptions = {
       ...defaultOptions,
       ...valueOptions,
-    }
+    };
     return readConfigValue<T>(locationsMap, objectPath, mergedOptions);
   }
 
