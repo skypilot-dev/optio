@@ -1,3 +1,13 @@
+## [2.0.3](https://github.com/skypilot-dev/optio/compare/v2.0.3-next.0...v2.0.3) (2021-01-18)
+
+
+### Bug Fixes
+
+* `safeLoad` call to YAML library fails after upgrade ([0db9a0b](https://github.com/skypilot-dev/optio/commit/0db9a0b5bf01885ce4be23d05466898b720eaf81))
+* GitHub Actions workflows fail on set-env commands ([80cd514](https://github.com/skypilot-dev/optio/commit/80cd51463854d2985279a987100ff8952523cfe6))
+
+
+
 ## [2.0.2](https://github.com/skypilot-dev/optio/compare/v2.0.2-next.0...v2.0.2) (2020-10-06)
 
 
