@@ -7,8 +7,9 @@ import { readConfigFile } from './readConfigFile';
 
 export interface ReadConfigValueGeneralOptions {
   addedCallDepth?: Integer; // how many additional levels to go down the call stack to identify the caller in errors
-  ignoreEmpty?: boolean; // if true, empty string values are considered missing (undefined) even if the key is found
   exitOnError?: boolean; // if true, `process.exit(1)` on error
+  ignoreEmpty?: boolean; // if true, empty string values are considered missing (undefined) even if the key is found
+  ignorePattern?: RegExp | null; // values matching the pattern are considered missing (undefined)
   quiet?: boolean; // if true, send no output to the console on `process.exit(1)`
 }
 
@@ -18,6 +19,8 @@ export interface ReadConfigValueOptions<T> extends ReadConfigValueGeneralOptions
 }
 
 // type ReadConfigValueFn = <T>(objectPath: string, options?: ReadConfigValueOptions<T>) => MaybeUndefined<T>;
+// const defaultIgnorePattern = /^\/\*.*\*\/$/; // ignore anything be
+const defaultIgnorePattern = new RegExp('/*(.*)*/');
 
 export function readConfigValue<T>(
   fileLocationsMap: FileLocationsMap,
@@ -44,7 +47,15 @@ export function readConfigValue<T>(
   objectPath: string,
   options: ReadConfigValueOptions<T> = {}
 ): MaybeUndefined<T> | never {
-  const { addedCallDepth, defaultValue, exitOnError, ignoreEmpty, quiet, required } = options;
+  const {
+    addedCallDepth,
+    defaultValue,
+    exitOnError,
+    ignoreEmpty,
+    ignorePattern = defaultIgnorePattern,
+    quiet,
+    required,
+  } = options;
 
   const filepaths = parseFilepaths(fileLocationsMap);
   const configs = filepaths.map(pathToFile => readConfigFile({ pathToFile }));
@@ -55,7 +66,7 @@ export function readConfigValue<T>(
   for (let i = 0; i < configs.length; i += 1) {
     const config = configs[i];
     const value = getOrDefault(config, objectPath);
-    if (value !== undefined) {
+    if (value !== undefined && (!ignorePattern || !ignorePattern.test(value))) {
       if (value !== '') {
         return value;
       }
@@ -78,8 +89,8 @@ export function readConfigValue<T>(
 export function configureReadConfigValue(
   generalOptions: FileLocationsMap & ReadConfigValueGeneralOptions
 ) {
-  const { addedCallDepth = 1, exitOnError, ignoreEmpty, quiet, ...locationsMap } = generalOptions;
-  const defaultOptions = { addedCallDepth, exitOnError, ignoreEmpty, quiet };
+  const { addedCallDepth = 1, exitOnError, ignoreEmpty, ignorePattern, quiet, ...locationsMap } = generalOptions;
+  const defaultOptions = { addedCallDepth, exitOnError, ignoreEmpty, ignorePattern, quiet };
 
   function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { defaultValue: T }): T
   function readConfig<T>(objectPath: string, options: ReadConfigValueOptions<T> & { required: true }): T | never
