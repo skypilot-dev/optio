@@ -175,6 +175,35 @@ const value = readConfigValue<string>(
  */
 ```
 
+#### Ignoring placeholders
+
+By default, strings enclosed in `/*` and `*/` delimeters are treated as undefined. This is useful, for example,
+when you want credentials to be kept in a private config file (one excluded from source control) but want to include
+an explanatory comment in the public config file.
+
+Example:
+
+```yaml
+# Public config
+apiToken: '/* store in `local/config.yaml` */'
+```
+
+```yaml
+# Private config
+apiToken: 'abc123-secret-api-token'
+```
+
+```typescript
+const value = readConfigValue<string>(
+  { filepaths: ['config.yaml', 'local/config.yaml'] },
+  'service.apiToken',
+  { ignorePattern: RegExp }, // defaults to `/^\/\*.*\*\/$/`
+)
+```
+
+A custom ignore pattern can be set using the `ignorePattern` option. To disable the ignore-pattern feature
+entirely, set `ignorePattern` to `null`.
+
 ### Partial application
 
 **To do:** Add examples showing how to use `configureReadConfigValue`.

@@ -4,5 +4,7 @@ option2: option2-value
 falsyBooleanOption: false
 falsyNumericOption: 0
 falsyStringOption: ''
+bracketedOption: '[value]'
+ignoredOption: '/* placeholder */'
 parentOption:
   nestedOption: 'nestedOption-value'

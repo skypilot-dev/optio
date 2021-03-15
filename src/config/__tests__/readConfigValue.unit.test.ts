@@ -96,6 +96,27 @@ describe('readConfigValue(', () => {
     expect(value).toBe(undefined);
   });
 
+  it('a value matching ignorePattern should be treated as undefined', () => {
+    const options = { filepaths };
+
+    const ignoredValue = readConfigValue(options, 'ignoredOption');
+    expect(ignoredValue).toBe(undefined);
+  });
+
+  it('if a custom ignorePattern is set, it should be used', () => {
+    const options = { filepaths };
+
+    const ignoredValue = readConfigValue(options, 'falsyStringOption', { ignorePattern: /^$/ });
+    expect(ignoredValue).toBe(undefined);
+  });
+
+  it('setting ignorePattern to null should disable the pattern', () => {
+    const options = { filepaths };
+
+    const value = readConfigValue(options, 'ignoredOption', { ignorePattern: null });
+    expect(value).toBe('/* placeholder */');
+  });
+
   it('`0` and `false` should be returned as valid', () => {
     const options = { filepaths };
 
@@ -120,18 +141,33 @@ describe('readConfigValue(', () => {
 
 describe('configureReadConfigValue()', () => {
   it('should set the defaults for calls to the returned function', () => {
-    const readValue = configureReadConfigValue({ ignoreEmpty: true, filepaths });
+    const readValue = configureReadConfigValue({
+      ignoreEmpty: true,
+      ignorePattern: /^\[.*]$/,
+      filepaths,
+    });
 
-    const value: string | undefined = readValue<string>('falsyStringOption');
-
+    const value = readValue<string>('bracketedOption');
     expect(value).toBe(undefined);
+
+    expect(
+      readConfigValue({ filepaths }, 'bracketedOption')
+    ).toBe('[value]');
   });
 
   it('options passed to the returned function should override the defaults', () => {
-    const readValue = configureReadConfigValue({ ignoreEmpty: false, filepaths });
+    const readValue = configureReadConfigValue({
+      ignoreEmpty: false,
+      ignorePattern: /^\[.*]$/,
+      filepaths,
+    });
 
     expect(() => {
       readValue('falsyStringOption', { ignoreEmpty: true, required: true });
     }).toThrowError("A non-empty value for the key 'falsyStringOption' was not found");
+
+    expect(readValue(
+      'bracketedOption', { ignorePattern: null })
+    ).toBe('[value]');
   });
 });
